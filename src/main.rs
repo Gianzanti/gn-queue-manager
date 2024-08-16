@@ -1,7 +1,9 @@
+use axum::http::Method;
 use axum::{routing::get, Router};
 use controllers::*;
 use sqlx::migrate::MigrateDatabase;
 use sqlx::{Pool, Sqlite, SqlitePool};
+use tower_http::cors::{AllowOrigin, CorsLayer};
 
 mod controllers;
 mod visitor;
@@ -42,6 +44,11 @@ async fn main() -> shuttle_axum::ShuttleAxum {
     let state = AppState::new(pool);
 
     let router = Router::new()
+        .layer(
+            CorsLayer::new()
+                .allow_origin(AllowOrigin::any())
+                .allow_methods([Method::GET, Method::POST, Method::OPTIONS]),
+        )
         .route("/", get(hello_world))
         .route("/visitors", get(retrieve_all_visitor).post(create_visitor))
         .route(
