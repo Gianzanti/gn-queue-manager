@@ -88,7 +88,7 @@ pub async fn update_visitor_by_id(
                  lgpd = (case when $4 is not null then $4 else lgpd end),
                  image_rights = (case when $5 is not null then $5 else image_rights end),
                  customer = (case when $6 is not null then $6 else customer end),
-                 updated_at = datetime('now','localtime')
+                 updated_at = now()
                 WHERE id = $7",
     )
     .bind(json.name)

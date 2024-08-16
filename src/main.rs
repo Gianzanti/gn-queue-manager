@@ -1,7 +1,6 @@
 use axum::{routing::get, Router};
 use controllers::*;
-use sqlx::migrate::MigrateDatabase;
-use sqlx::{Pool, Sqlite, SqlitePool};
+use sqlx::PgPool;
 use tower_http::cors::{Any, CorsLayer};
 
 mod controllers;
@@ -11,30 +10,19 @@ async fn hello_world() -> &'static str {
     "Hello, world!"
 }
 
-const DB_URL: &str = "sqlite://gn.sqlite3";
-
 #[derive(Clone)]
 pub struct AppState {
-    db: Pool<Sqlite>,
+    db: PgPool,
 }
 
 impl AppState {
-    fn new(db: Pool<Sqlite>) -> Self {
+    fn new(db: PgPool) -> Self {
         Self { db }
     }
 }
 
 #[shuttle_runtime::main]
-async fn main() -> shuttle_axum::ShuttleAxum {
-    if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
-        Sqlite::create_database(DB_URL).await.unwrap();
-        // match create_schema(&DB_URL).await {
-        //     Ok(_) => println!("Database created Sucessfully"),
-        //     Err(e) => panic!("{}", e),
-        // }
-    }
-    let pool = SqlitePool::connect(DB_URL).await.unwrap();
-
+async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!("src/migrations")
         .run(&pool)
         .await

@@ -2,10 +2,10 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 #[derive(sqlx::Type, Serialize, Deserialize, Debug)]
-#[sqlx(rename_all = "lowercase")]
+#[repr(i32)]
 pub enum Customer {
-    Resound,
-    Beltone,
+    Resound = 0,
+    Beltone = 1,
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
