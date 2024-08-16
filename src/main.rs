@@ -1,4 +1,3 @@
-use axum::http::Method;
 use axum::{routing::get, Router};
 use controllers::*;
 use sqlx::migrate::MigrateDatabase;
@@ -52,7 +51,13 @@ async fn main() -> shuttle_axum::ShuttleAxum {
                 .put(update_visitor_by_id)
                 .delete(delete_visitor_by_id),
         )
-        .layer(CorsLayer::new().allow_origin(Any).allow_methods(Any))
+        .layer(
+            CorsLayer::new()
+                .allow_origin(Any)
+                .allow_methods(Any)
+                .allow_private_network(true)
+                .allow_headers(Any),
+        )
         .with_state(state);
 
     Ok(router.into())
