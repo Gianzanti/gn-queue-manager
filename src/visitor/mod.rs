@@ -19,6 +19,8 @@ pub struct Visitor {
     pub image_rights: bool,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub observations: String,
+    pub confirm_visit: bool,
 }
 
 #[derive(Deserialize, Debug)]
