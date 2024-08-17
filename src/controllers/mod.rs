@@ -78,7 +78,6 @@ pub async fn update_visitor_by_id(
     Path(id): Path<i32>,
     Json(json): Json<VisitorUpdateRecord>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
-    println!("{:?}", json);
     if let Err(e) = sqlx::query(
         "UPDATE VISITORS 
                 SET
@@ -88,8 +87,10 @@ pub async fn update_visitor_by_id(
                  lgpd = (case when $4 is not null then $4 else lgpd end),
                  image_rights = (case when $5 is not null then $5 else image_rights end),
                  customer = (case when $6 is not null then $6 else customer end),
-                 updated_at = now()
-                WHERE id = $7",
+                 observations = (case when $7 is not null then $7 else observations end),
+                 confirm_visit = (case when $8 is not null then $8 else confirm_visit end),
+                 updated_at = NOW()
+                WHERE id = $9",
     )
     .bind(json.name)
     .bind(json.phone)
@@ -97,6 +98,8 @@ pub async fn update_visitor_by_id(
     .bind(json.lgpd)
     .bind(json.image_rights)
     .bind(json.customer)
+    .bind(json.observations)
+    .bind(json.confirm_visit)
     .bind(id)
     .execute(&state.db)
     .await

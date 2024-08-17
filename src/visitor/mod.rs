@@ -41,4 +41,6 @@ pub struct VisitorUpdateRecord {
     pub email: Option<String>,
     pub lgpd: Option<bool>,
     pub image_rights: Option<bool>,
+    pub observations: Option<String>,
+    pub confirm_visit: Option<bool>,
 }
