@@ -91,8 +91,8 @@ pub async fn update_visitor_by_id(
                  customer = (case when $6 is not null then $6 else customer end),
                  observations = (case when $7 is not null then $7 else observations end),
                  confirm_visit = (case when $8 is not null then $8 else confirm_visit end),
-                 state = (case when $9 is not null then $9 else confirm_visit end),
-                 job = (case when $10 is not null then $10 else confirm_visit end),
+                 state = (case when $9 is not null then $9 else state end),
+                 job = (case when $10 is not null then $10 else job end),
                  updated_at = NOW()
                 WHERE id = $11",
     )
