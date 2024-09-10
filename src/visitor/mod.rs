@@ -1,3 +1,4 @@
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
@@ -17,8 +18,8 @@ pub struct Visitor {
     pub email: String,
     pub lgpd: bool,
     pub image_rights: bool,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: chrono::DateTime<Utc>,
+    pub updated_at: chrono::DateTime<Utc>,
     pub observations: String,
     pub confirm_visit: bool,
     pub state: String,
