@@ -54,7 +54,7 @@ pub async fn create_visitor(
     Json(json): Json<VisitorSubmission>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     if let Err(e) = sqlx::query(
-        "INSERT INTO VISITORS (name, customer, phone, email, lgpd, image_rights) VALUES ($1, $2, $3, $4, $5, $6)",
+        "INSERT INTO VISITORS (name, customer, phone, email, lgpd, image_rights, state, job) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
     )
     .bind(json.name)
     .bind(json.customer)
@@ -62,6 +62,8 @@ pub async fn create_visitor(
     .bind(json.email)
     .bind(json.lgpd)
     .bind(json.image_rights)
+    .bind(json.state)
+    .bind(json.job)
     .execute(&state.db)
     .await
     {
@@ -89,8 +91,10 @@ pub async fn update_visitor_by_id(
                  customer = (case when $6 is not null then $6 else customer end),
                  observations = (case when $7 is not null then $7 else observations end),
                  confirm_visit = (case when $8 is not null then $8 else confirm_visit end),
+                 state = (case when $9 is not null then $9 else confirm_visit end),
+                 job = (case when $10 is not null then $10 else confirm_visit end),
                  updated_at = NOW()
-                WHERE id = $9",
+                WHERE id = $11",
     )
     .bind(json.name)
     .bind(json.phone)
@@ -100,6 +104,8 @@ pub async fn update_visitor_by_id(
     .bind(json.customer)
     .bind(json.observations)
     .bind(json.confirm_visit)
+    .bind(json.state)
+    .bind(json.job)
     .bind(id)
     .execute(&state.db)
     .await

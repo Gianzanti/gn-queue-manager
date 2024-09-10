@@ -1,1 +1,1 @@
-assets = ["src/migrations/20240816_visitors_creation.sql"]
+assets = ["src/migrations/20240816_visitors_creation.sql", "src/migrations/20240817_visitors_add_fields.sql", "src/migrations/20240910_visitors_add_fields.sql"]

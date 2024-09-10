@@ -21,6 +21,8 @@ pub struct Visitor {
     pub updated_at: chrono::NaiveDateTime,
     pub observations: String,
     pub confirm_visit: bool,
+    pub state: String,
+    pub job: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -31,6 +33,8 @@ pub struct VisitorSubmission {
     pub email: String,
     pub lgpd: bool,
     pub image_rights: bool,
+    pub state: String,
+    pub job: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -43,4 +47,6 @@ pub struct VisitorUpdateRecord {
     pub image_rights: Option<bool>,
     pub observations: Option<String>,
     pub confirm_visit: Option<bool>,
+    pub state: Option<String>,
+    pub job: Option<String>,
 }
