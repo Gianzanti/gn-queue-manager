@@ -1,19 +1,19 @@
 use crate::{
-    visitor::{Visitor, VisitorSubmission, VisitorUpdateRecord},
     AppState,
+    visitor::{Visitor, VisitorSubmission, VisitorUpdateRecord},
 };
 use axum::{
+    Json,
     extract::{Path, State},
     http::StatusCode,
     response::IntoResponse,
-    Json,
 };
 
 pub async fn retrieve_all_visitor(
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     let res = match sqlx::query_as::<_, Visitor>("SELECT * FROM VISITORS")
-        .fetch_all(&state.db)
+        .fetch_all(&*state)
         .await
     {
         Ok(res) => res,
@@ -34,7 +34,7 @@ pub async fn retrieve_visitor_by_id(
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     let res = match sqlx::query_as::<_, Visitor>("SELECT * FROM VISITORS WHERE ID = $1")
         .bind(id)
-        .fetch_one(&state.db)
+        .fetch_one(&*state)
         .await
     {
         Ok(res) => res,
@@ -64,7 +64,7 @@ pub async fn create_visitor(
     .bind(json.image_rights)
     .bind(json.state)
     .bind(json.job)
-    .execute(&state.db)
+    .execute(&*state)
     .await
     {
         return Err((
@@ -107,7 +107,7 @@ pub async fn update_visitor_by_id(
     .bind(json.state)
     .bind(json.job)
     .bind(id)
-    .execute(&state.db)
+    .execute(&*state)
     .await
     {
         return Err((
@@ -125,7 +125,7 @@ pub async fn delete_visitor_by_id(
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     if let Err(e) = sqlx::query("DELETE FROM VISITORS WHERE ID = $1")
         .bind(id)
-        .execute(&state.db)
+        .execute(&*state)
         .await
     {
         return Err((

@@ -1,24 +1,16 @@
-use axum::{routing::get, Router};
+use crate::app_state::AppState;
+use axum::{Router, routing::get};
 use controllers::*;
 use sqlx::PgPool;
 use tower_http::cors::{Any, CorsLayer};
 
+mod app_state;
 mod controllers;
+mod models;
 mod visitor;
 
 async fn hello_world() -> &'static str {
     "Hello, world!"
-}
-
-#[derive(Clone)]
-pub struct AppState {
-    db: PgPool,
-}
-
-impl AppState {
-    fn new(db: PgPool) -> Self {
-        Self { db }
-    }
 }
 
 #[shuttle_runtime::main]
@@ -34,7 +26,7 @@ async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         .route("/", get(hello_world))
         .route("/visitors", get(retrieve_all_visitor).post(create_visitor))
         .route(
-            "/visitors/:id",
+            "/visitors/{id}",
             get(retrieve_visitor_by_id)
                 .put(update_visitor_by_id)
                 .delete(delete_visitor_by_id),
